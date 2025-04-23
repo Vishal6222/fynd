@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Step Progress Bar</title>
+    </head>
+</html>
+<body>
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress" id="progress"></div>
+            <div class="circle active" id="circle-1">1</div>   
+            <div class="circle" id="circle-2">2</div>
+            <div class="circle" id="circle-3">3</div>
+            <div class="circle" id="circle-4">4</div>
+            <div class="circle" id="circle-5">5</div>
+        </div>
+        <div class="buttons">
+            <button id="prev" disabled>Previous</button>
+            <button id="next">Next</button>
+        </div>
+    </div>
+</body>
+
+<style>
+ * {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Georgia-serif', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #908585;
+  margin: 0;
+}
+
+.container {
+  width: 400px
+}
+
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.progress-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: #000000;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.progress {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  background-color: #a59ff7;
+  width: 0%;
+  z-index: 1;
+  transform: translateY(-50%);
+  transition: width 0.4s ease;
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: 3px solid #000000;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.circle.active {
+  border-color: #f3d00c;
+  background-color: #d534db;
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+button:disabled {
+  background-color: #a8c9e5;
+  cursor: not-allowed;
+}
+</style>
+<script>
+    const progress = document.getElementById('progress');
+    const circles = document.querySelectorAll('.circle');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    let currentActive = 1;
+    nextBtn.addEventListener('click', () => {
+        currentActive++;
+        if (currentActive > circles.length) {
+            currentActive = circles.length;
+        }
+        update();
+    });
+    prevBtn.addEventListener('click', () => {
+        currentActive--;
+        if (currentActive < 1) {
+            currentActive = 1;
+        }
+        update();
+    });
+    function update() {
+        circles.forEach((circle, index) => {
+            if (index < currentActive) {
+                circle.classList.add('active');
+            } else {
+                circle.classList.remove('active');
+            }
+        });
+        const actives = document.querySelectorAll('.active');
+        progress.style.width = ((actives.length - 1) / (circles.length - 1)) * 100 + '%';
+        prevBtn.disabled = currentActive === 1;
+        nextBtn.disabled = currentActive === circles.length;
+    }
+</script>
